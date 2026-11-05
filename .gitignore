@@ -1,0 +1,6 @@
+node_modules/
+_site/
+src/assets/
+.DS_Store
+.qa/
+design-qa.md

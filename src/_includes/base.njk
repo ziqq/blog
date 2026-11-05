@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="{{ locale }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <title>{% if title %}{{ title }} — {% endif %}{{ site.title }}</title>
+    <meta name="description" content="{{ description or strings.description }}">
+    <link rel="canonical" href="{{ site.url }}{{ page.url }}">
+    {% set alternates = page.url | languageAlternates(section, collections.post or []) %}
+    {% if alternates.en %}<link rel="alternate" hreflang="en" href="{{ site.url }}{{ alternates.en }}">{% endif %}
+    {% if alternates.ru %}<link rel="alternate" hreflang="ru" href="{{ site.url }}{{ alternates.ru }}">{% endif %}
+    <meta property="og:type" content="{% if section == 'post' %}article{% else %}website{% endif %}">
+    <meta property="og:title" content="{{ title or site.title }}">
+    <meta property="og:description" content="{{ description or strings.description }}">
+    <meta property="og:url" content="{{ site.url }}{{ page.url }}">
+    <meta property="og:locale" content="{% if locale == 'ru' %}ru_RU{% else %}en_US{% endif %}">
+    <link rel="stylesheet" href="/assets/main.css">
+    <script src="/assets/locale.js"></script>
+    <script type="module" src="/assets/main.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#content">{{ strings.skip }}</a>
+    <div class="layout">
+      <header class="sidebar">
+        <div class="identity">
+          <a class="wordmark" href="{{ home }}?lang={{ locale }}" aria-label="{{ strings.homeLabel }}">{{ site.title }}</a>
+          <p class="tagline">{{ strings.tagline }}</p>
+        </div>
+        <nav class="socials" aria-label="{{ strings.social }}">
+          {% for social in site.socials %}
+          <a href="{{ social.url }}" aria-label="{% if social.name == 'Email' %}{{ strings.email }}{% else %}{{ social.name }}{% endif %}"><img src="/assets/icons/{{ social.icon }}.svg" width="32" height="32" alt=""></a>
+          {% endfor %}
+        </nav>
+        <nav class="navigation" aria-label="{{ strings.navigation }}">
+          <a href="{{ home }}?lang={{ locale }}"{% if section != 'about' %} aria-current="{% if section == 'post' %}location{% else %}page{% endif %}"{% endif %}>{{ strings.posts }}</a>
+          <a href="{{ home }}about/?lang={{ locale }}"{% if section == 'about' %} aria-current="page"{% endif %}>{{ strings.about }}</a>
+        </nav>
+      </header>
+      <main id="content" tabindex="-1">{{ content | safe }}</main>
+    </div>
+  </body>
+</html>

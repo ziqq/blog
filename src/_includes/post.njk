@@ -1,0 +1,14 @@
+---
+layout: base.njk
+section: post
+---
+<article class="reading" data-enter>
+  <a class="back-link" href="{{ home }}?lang={{ locale }}">{{ strings.back }}</a>
+  <header class="reading-header">
+    <time datetime="{{ page.date | isoDate }}">{{ page.date | fullDate(locale) }}</time>
+    <h1>{{ title }}</h1>
+    <p class="lead">{{ description }}</p>
+  </header>
+  {% if demo %}<p class="demo-note">{{ strings.demo }}</p>{% endif %}
+  <div class="prose">{{ content | safe }}</div>
+</article>

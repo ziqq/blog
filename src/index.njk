@@ -1,0 +1,30 @@
+---
+layout: base.njk
+title: ""
+section: posts
+---
+<header class="intro" data-enter>
+  <h1>{{ strings.heading }}</h1>
+  <p>{{ strings.intro }}<br class="desktop-break"> {{ strings.introMore }}</p>
+</header>
+{% set groups = collections.postYears | inLanguage(locale) %}
+{% for group in groups %}
+<section class="post-year" aria-labelledby="year-{{ group.year }}">
+  <h2 class="year" id="year-{{ group.year }}" data-enter>{{ group.year }}</h2>
+  <ol class="post-list">
+    {% for post in group.posts %}
+    <li class="post-item" data-enter>
+      <article>
+        <div class="post-heading">
+          <h3><a href="{{ post.url }}?lang={{ locale }}">{{ post.data.title }}</a></h3>
+          <time datetime="{{ post.date | isoDate }}">{{ post.date | shortDate(locale) }}</time>
+        </div>
+        <p>{{ post.data.description }}</p>
+      </article>
+    </li>
+    {% endfor %}
+  </ol>
+</section>
+{% else %}
+<p class="empty-state" data-enter>{{ strings.empty }}</p>
+{% endfor %}

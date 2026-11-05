@@ -1,0 +1,22 @@
+{
+  "name": "ustinoff-blog",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "node scripts/build-assets.mjs --clean && eleventy --serve --port=4173",
+    "build": "node scripts/build-assets.mjs --clean && eleventy",
+    "check": "tsc --noEmit",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "3.1.8",
+    "@fontsource/ibm-plex-mono": "5.3.0",
+    "@fortawesome/fontawesome-free": "7.3.1",
+    "esbuild": "0.28.2",
+    "sass": "1.107.1",
+    "typescript": "7.0.2"
+  }
+}
