@@ -24,7 +24,7 @@
     <div class="layout">
       <header class="sidebar">
         <div class="identity">
-          <a class="wordmark" href="{{ home }}?lang={{ locale }}" aria-label="{{ strings.homeLabel }}">{{ site.title }}</a>
+          <a class="wordmark" href="{{ home }}" aria-label="{{ strings.homeLabel }}">{{ site.title }}</a>
           <p class="tagline">{{ strings.tagline }}</p>
         </div>
         <nav class="socials" aria-label="{{ strings.social }}">
@@ -33,8 +33,8 @@
           {% endfor %}
         </nav>
         <nav class="navigation" aria-label="{{ strings.navigation }}">
-          <a href="{{ home }}?lang={{ locale }}"{% if section != 'about' %} aria-current="{% if section == 'post' %}location{% else %}page{% endif %}"{% endif %}>{{ strings.posts }}</a>
-          <a href="{{ home }}about/?lang={{ locale }}"{% if section == 'about' %} aria-current="page"{% endif %}>{{ strings.about }}</a>
+          <a href="{{ home }}"{% if section != 'about' %} aria-current="{% if section == 'post' %}location{% else %}page{% endif %}"{% endif %}>{{ strings.posts }}</a>
+          <a href="{{ home }}about/"{% if section == 'about' %} aria-current="page"{% endif %}>{{ strings.about }}</a>
         </nav>
       </header>
       <main id="content" tabindex="-1">{{ content | safe }}</main>

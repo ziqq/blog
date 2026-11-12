@@ -13,6 +13,7 @@ function page({
   languages = ['en-US'],
   language = 'en-US',
   alternate = 'https://ustinoff.dev/ru/',
+  referrer = '',
   loading = false,
 } = {}) {
   const redirects = [];
@@ -27,6 +28,7 @@ function page({
     navigator: { languages, language },
     document: {
       readyState: loading ? 'loading' : 'complete',
+      referrer,
       documentElement: { lang: current },
       querySelector(selector) {
         assert.match(selector, /^link\[rel="alternate"\]\[hreflang="(en|ru)"\]$/);
@@ -47,12 +49,12 @@ function page({
 }
 
 test('Russian browser opens the Russian static page on the current local origin', () => {
-  assert.deepEqual(page({ languages: ['ru-RU'] }).redirects, ['http://localhost:4173/ru/?lang=ru']);
+  assert.deepEqual(page({ languages: ['ru-RU'] }).redirects, ['http://localhost:4173/ru/']);
 });
 
 test('the first supported language wins, rather than any Russian language in the list', () => {
   assert.deepEqual(page({ languages: ['de-DE', 'en-GB', 'ru-RU'] }).redirects, []);
-  assert.deepEqual(page({ languages: ['de-DE', 'RU-ru', 'en'] }).redirects, ['http://localhost:4173/ru/?lang=ru']);
+  assert.deepEqual(page({ languages: ['de-DE', 'RU-ru', 'en'] }).redirects, ['http://localhost:4173/ru/']);
 });
 
 test('unsupported or empty browser languages fall back to English', () => {
@@ -61,7 +63,25 @@ test('unsupported or empty browser languages fall back to English', () => {
 });
 
 test('navigator.language is used when navigator.languages is unavailable', () => {
-  assert.deepEqual(page({ languages: null, language: 'ru-RU' }).redirects, ['http://localhost:4173/ru/?lang=ru']);
+  assert.deepEqual(page({ languages: null, language: 'ru-RU' }).redirects, ['http://localhost:4173/ru/']);
+});
+
+test('clean internal navigation keeps the destination language', () => {
+  assert.deepEqual(page({
+    url: 'https://ustinoff.dev/about/',
+    referrer: 'https://ustinoff.dev/?lang=en',
+    languages: ['ru'],
+    alternate: 'https://ustinoff.dev/ru/about/',
+  }).redirects, []);
+});
+
+test('arriving from another site still uses the browser language', () => {
+  assert.deepEqual(page({
+    url: 'https://ustinoff.dev/about/',
+    referrer: 'https://example.com/',
+    languages: ['ru'],
+    alternate: 'https://ustinoff.dev/ru/about/',
+  }).redirects, ['https://ustinoff.dev/ru/about/']);
 });
 
 test('explicit English overrides a Russian browser', () => {
@@ -77,11 +97,11 @@ test('direct Russian URLs retain their language without storage', () => {
 });
 
 test('explicit English can override a direct Russian page', () => {
-  assert.deepEqual(page({ current: 'ru', url: 'https://ustinoff.dev/ru/about/?lang=en', alternate: 'https://ustinoff.dev/about/' }).redirects, ['https://ustinoff.dev/about/?lang=en']);
+  assert.deepEqual(page({ current: 'ru', url: 'https://ustinoff.dev/ru/about/?lang=en', referrer: 'https://ustinoff.dev/ru/', alternate: 'https://ustinoff.dev/about/' }).redirects, ['https://ustinoff.dev/about/?lang=en']);
 });
 
 test('invalid language parameters do not suppress browser detection', () => {
-  assert.deepEqual(page({ url: 'https://ustinoff.dev/?lang=fr', languages: ['ru'] }).redirects, ['https://ustinoff.dev/ru/?lang=ru']);
+  assert.deepEqual(page({ url: 'https://ustinoff.dev/?lang=fr', languages: ['ru'] }).redirects, ['https://ustinoff.dev/ru/']);
 });
 
 test('article redirects use the supplied translation and preserve query and fragment', () => {
@@ -89,7 +109,7 @@ test('article redirects use the supplied translation and preserve query and frag
     url: 'http://localhost:4173/posts/english-title/?ref=rss#section',
     languages: ['ru'],
     alternate: 'https://ustinoff.dev/ru/posts/russian-title/',
-  }).redirects, ['http://localhost:4173/ru/posts/russian-title/?ref=rss&lang=ru#section']);
+  }).redirects, ['http://localhost:4173/ru/posts/russian-title/?ref=rss#section']);
 });
 
 test('missing article translations keep the original article instead of redirecting to an archive', () => {
@@ -101,7 +121,7 @@ test('loading documents wait for translation links without requiring a language 
   const pending = page({ languages: ['ru'], loading: true });
   assert.deepEqual(pending.redirects, []);
   pending.load();
-  assert.deepEqual(pending.redirects, ['http://localhost:4173/ru/?lang=ru']);
+  assert.deepEqual(pending.redirects, ['http://localhost:4173/ru/']);
 });
 
 test('following an automatically selected Russian URL does not loop', () => {

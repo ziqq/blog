@@ -16,7 +16,7 @@ section: posts
     <li class="post-item" data-enter>
       <article>
         <div class="post-heading">
-          <h3><a href="{{ post.url }}?lang={{ locale }}">{{ post.data.title }}</a></h3>
+          <h3><a href="{{ post.url }}">{{ post.data.title }}</a></h3>
           <time datetime="{{ post.date | isoDate }}">{{ post.date | shortDate(locale) }}</time>
         </div>
         <p>{{ post.data.description }}</p>

@@ -20,7 +20,8 @@ test('both production homepages contain their own language, interface and altern
     assert(html.includes(empty));
     assert(html.includes('hreflang="en" href="https://ustinoff.dev/"'));
     assert(html.includes('hreflang="ru" href="https://ustinoff.dev/ru/"'));
-    assert(html.includes(`?lang=${locale}`));
+    assert(html.includes(`href="${url}"`));
+    assert(html.includes(`href="${url}about/"`));
   }
 });
 
@@ -38,6 +39,7 @@ test('published pages have neither language controls, copyright nor demo article
   const published = pages.filter((page) => page.url);
   assert.equal(published.length, 4);
   for (const page of published) {
+    assert.doesNotMatch(page.content, /href="[^"]*[?&]lang=/);
     assert(!page.content.includes('<select'));
     assert(!page.content.includes('©'));
     assert(!page.content.includes('/posts/'));

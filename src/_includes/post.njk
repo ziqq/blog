@@ -3,7 +3,7 @@ layout: base.njk
 section: post
 ---
 <article class="reading" data-enter>
-  <a class="back-link" href="{{ home }}?lang={{ locale }}">{{ strings.back }}</a>
+  <a class="back-link" href="{{ home }}">{{ strings.back }}</a>
   <header class="reading-header">
     <time datetime="{{ page.date | isoDate }}">{{ page.date | fullDate(locale) }}</time>
     <h1>{{ title }}</h1>
