@@ -1,6 +1,12 @@
 node_modules/
 _site/
 src/assets/
+/eleventy.config.js
+/scripts/build-assets.js
+/src/eleventy-data.js
+/src/**/*.11tydata.js
+/src/_data/*.js
+/test/*.test.mjs
 .DS_Store
 .qa/
 design-qa.md
