@@ -1,3 +1,5 @@
+import '../styles/main.scss';
+
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 if (!reducedMotion.matches && typeof Element.prototype.animate === 'function') {

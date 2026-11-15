@@ -7,6 +7,21 @@ import { transformSync } from 'esbuild';
 const source = readFileSync(new URL('../src/scripts/locale.ts', import.meta.url), 'utf8');
 const { code } = transformSync(source, { loader: 'ts', target: 'es2022' });
 
+interface PageOptions {
+  current?: 'en' | 'ru';
+  url?: string;
+  languages?: string[] | null;
+  language?: string;
+  alternate?: string | null;
+  referrer?: string;
+  loading?: boolean;
+}
+
+interface PageResult {
+  redirects: string[];
+  load: () => void;
+}
+
 function page({
   current = 'en',
   url = 'http://localhost:4173/',
@@ -15,26 +30,26 @@ function page({
   alternate = 'https://ustinoff.dev/ru/',
   referrer = '',
   loading = false,
-} = {}) {
-  const redirects = [];
-  let loaded;
+}: PageOptions = {}): PageResult {
+  const redirects: string[] = [];
+  let loaded: (() => void) | undefined;
   const context = {
     URL,
     location: {
       href: url,
       origin: new URL(url).origin,
-      replace: (target) => redirects.push(String(target)),
+      replace: (target: unknown) => redirects.push(String(target)),
     },
     navigator: { languages, language },
     document: {
       readyState: loading ? 'loading' : 'complete',
       referrer,
       documentElement: { lang: current },
-      querySelector(selector) {
+      querySelector(selector: string) {
         assert.match(selector, /^link\[rel="alternate"\]\[hreflang="(en|ru)"\]$/);
         return alternate === null ? null : { getAttribute: () => alternate };
       },
-      addEventListener(event, callback, options) {
+      addEventListener(event: string, callback: () => void, options: { once: boolean }) {
         assert.equal(event, 'DOMContentLoaded');
         assert.equal(options.once, true);
         loaded = callback;
@@ -45,7 +60,7 @@ function page({
     get() { throw new Error('Locale selection must not depend on browser storage'); },
   });
   runInNewContext(code, context);
-  return { redirects, load: () => loaded() };
+  return { redirects, load: () => loaded!() };
 }
 
 test('Russian browser opens the Russian static page on the current local origin', () => {

@@ -1,4 +1,4 @@
-export default {
+const site = {
   title: 'ustinoff.dev',
   url: 'https://ustinoff.dev',
   github: 'https://github.com/ziqq',
@@ -10,3 +10,7 @@ export default {
     { name: 'Email', url: 'mailto:a.a.ustinoff@gmail.com', icon: 'envelope' },
   ],
 };
+
+export type Site = typeof site;
+
+export default site;

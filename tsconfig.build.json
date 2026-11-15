@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false
+  },
+  "include": [
+    "eleventy.config.ts",
+    "scripts/**/*.ts",
+    "src/eleventy-data.ts",
+    "src/**/*.11tydata.ts",
+    "src/_data/**/*.ts",
+    "test/**/*.mts",
+    "types/**/*.d.ts"
+  ]
+}

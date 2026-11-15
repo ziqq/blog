@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import Eleventy from '@11ty/eleventy';
+import Eleventy, { type EleventyPage } from '@11ty/eleventy';
 
-const pages = await new Eleventy('src', undefined, { configPath: 'eleventy.config.js' }).toJSON();
-const content = (url) => {
+const pages: EleventyPage[] = await new Eleventy('src', undefined, { configPath: 'eleventy.config.js' }).toJSON();
+const content = (url: string): string => {
   const page = pages.find((entry) => entry.url === url);
   assert(page, `Expected a generated page at ${url}`);
   return page.content;
@@ -35,9 +35,25 @@ test('author pages retain page-specific language alternatives', () => {
   assert(content('/ru/about/').includes('Привет, я Антон Устинов.'));
 });
 
+test('network check pages are localized and keep their language alternatives', () => {
+  for (const [url, locale, heading, lead] of [
+    ['/check/', 'en', 'Network check', 'Direct checks show what AI services see'],
+    ['/ru/check/', 'ru', 'Проверка сети', 'Прямые проверки показывают'],
+  ]) {
+    const html = content(url);
+    assert(html.includes(`<html lang="${locale}">`));
+    assert(html.includes(heading));
+    assert(html.includes(lead));
+    assert(html.includes('data-check-app'));
+    assert(html.includes('src="/assets/check.js"'));
+    assert(html.includes('hreflang="en" href="https://ustinoff.dev/check/"'));
+    assert(html.includes('hreflang="ru" href="https://ustinoff.dev/ru/check/"'));
+  }
+});
+
 test('published pages have neither language controls, copyright nor demo articles', () => {
   const published = pages.filter((page) => page.url);
-  assert.equal(published.length, 4);
+  assert.equal(published.length, 6);
   for (const page of published) {
     assert.doesNotMatch(page.content, /href="[^"]*[?&]lang=/);
     assert(!page.content.includes('<select'));

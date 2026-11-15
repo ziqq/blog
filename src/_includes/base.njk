@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light">
+    <link rel="icon" href="data:,">
     <title>{% if title %}{{ title }} — {% endif %}{{ site.title }}</title>
     <meta name="description" content="{{ description or strings.description }}">
     <link rel="canonical" href="{{ site.url }}{{ page.url }}">
@@ -18,6 +19,7 @@
     <link rel="stylesheet" href="/assets/main.css">
     <script src="/assets/locale.js"></script>
     <script type="module" src="/assets/main.js"></script>
+    {% if section == 'check' %}<script type="module" src="/assets/check.js"></script>{% endif %}
   </head>
   <body>
     <a class="skip-link" href="#content">{{ strings.skip }}</a>
@@ -33,8 +35,9 @@
           {% endfor %}
         </nav>
         <nav class="navigation" aria-label="{{ strings.navigation }}">
-          <a href="{{ home }}"{% if section != 'about' %} aria-current="{% if section == 'post' %}location{% else %}page{% endif %}"{% endif %}>{{ strings.posts }}</a>
+          <a href="{{ home }}"{% if section == 'posts' or section == 'post' %} aria-current="{% if section == 'post' %}location{% else %}page{% endif %}"{% endif %}>{{ strings.posts }}</a>
           <a href="{{ home }}about/"{% if section == 'about' %} aria-current="page"{% endif %}>{{ strings.about }}</a>
+          <a href="{{ home }}check/"{% if section == 'check' %} aria-current="page"{% endif %}>{{ strings.checkNav }}</a>
         </nav>
       </header>
       <main id="content" tabindex="-1">{{ content | safe }}</main>

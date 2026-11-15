@@ -1,6 +1,5 @@
-import { cp, mkdir, rm, writeFile } from 'node:fs/promises';
-import { compileAsync } from 'sass';
-import { build } from 'esbuild';
+import { cp, mkdir, rm } from 'node:fs/promises';
+import { build } from 'vite';
 
 if (process.argv.includes('--clean')) await rm('_site', { recursive: true, force: true });
 
@@ -17,11 +16,19 @@ for (const name of ['github', 'linkedin', 'x-twitter', 'telegram', 'envelope']) 
   await cp(`node_modules/@fortawesome/fontawesome-free/svgs/${family}/${name}.svg`, `src/assets/icons/${name}.svg`);
 }
 await cp('node_modules/@fortawesome/fontawesome-free/LICENSE.txt', 'src/assets/icons/LICENSE.txt');
-const styles = await compileAsync('src/styles/main.scss', { style: 'compressed' });
-await writeFile('src/assets/main.css', styles.css);
-await build({
-  entryPoints: ['src/scripts/main.ts'], outfile: 'src/assets/main.js',
-  bundle: true, minify: true, format: 'esm', target: 'es2022',
-});
 
-await build({ entryPoints: ['src/scripts/locale.ts'], outfile: 'src/assets/locale.js', bundle: true, minify: true, format: 'iife', target: 'es2022' });
+await build();
+await build({
+  configFile: false,
+  publicDir: false,
+  logLevel: 'warn',
+  build: {
+    outDir: 'src/assets',
+    emptyOutDir: false,
+    target: 'es2022',
+    rollupOptions: {
+      input: 'src/scripts/locale.ts',
+      output: { format: 'iife', entryFileNames: 'locale.js' },
+    },
+  },
+});

@@ -1,0 +1,110 @@
+---
+layout: base.njk
+section: check
+---
+<article class="check-app" data-check-app>
+  <header class="check-header" data-enter>
+    <p class="check-eyebrow">{{ strings.checkEyebrow }}</p>
+    <h1>{{ strings.checkTitle }}</h1>
+    <p class="check-lead">{{ strings.checkIntro }}</p>
+    <div class="check-actions">
+      <button class="check-button check-button-primary" id="check-run" type="button">{{ strings.checkRun }}</button>
+      <button class="check-button" id="check-copy" type="button" disabled>{{ strings.checkCopy }}</button>
+      <button class="check-button" id="check-mask" type="button" aria-pressed="false">{{ strings.checkMessages.showIps }}</button>
+    </div>
+    <p class="check-feedback" id="check-feedback" role="status" aria-live="polite"></p>
+  </header>
+
+  <noscript><p class="check-noscript">{{ strings.checkNoScript }}</p></noscript>
+
+  <section class="check-section check-overview-section" aria-labelledby="check-overview-heading" data-enter>
+    <div class="check-section-heading">
+      <h2 id="check-overview-heading">{{ strings.checkOverview }}</h2>
+      <p id="check-run-status" aria-live="polite">{{ strings.checkMessages.statusIdle }}</p>
+    </div>
+    <dl class="check-overview">
+      <div>
+        <dt>{{ strings.checkAvailability }}</dt>
+        <dd id="check-summary-services">—</dd>
+        <dd class="check-overview-detail" id="check-summary-exits">—</dd>
+      </div>
+      <div>
+        <dt>{{ strings.checkPrivacy }}</dt>
+        <dd id="check-summary-rtc">—</dd>
+        <dd class="check-overview-detail" id="check-summary-ipv6">—</dd>
+      </div>
+      <div>
+        <dt>{{ strings.checkBrowserSummary }}</dt>
+        <dd id="check-summary-browser">—</dd>
+        <dd class="check-overview-detail">{{ strings.checkBrowserText }}</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="check-section" aria-labelledby="check-findings-heading">
+    <div class="check-section-heading">
+      <h2 id="check-findings-heading">{{ strings.checkFindings }}</h2>
+    </div>
+    <p class="check-section-intro">{{ strings.checkFindingsText }}</p>
+    <ol class="check-findings" id="check-findings"></ol>
+  </section>
+
+  <section class="check-section" aria-labelledby="check-services-heading">
+    <div class="check-section-heading">
+      <h2 id="check-services-heading">{{ strings.checkServices }}</h2>
+      <p id="check-progress-label">0 / 18</p>
+    </div>
+    <p class="check-section-intro">{{ strings.checkServicesText }}</p>
+    <progress class="check-progress" id="check-progress" max="18" value="0" aria-labelledby="check-progress-label"></progress>
+    <div class="check-table-wrap">
+      <table class="check-table">
+        <thead>
+          <tr><th scope="col">{{ strings.checkService }}</th><th scope="col">{{ strings.checkResult }}</th><th scope="col">{{ strings.checkNetwork }}</th></tr>
+        </thead>
+        <tbody id="check-service-rows"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="check-section" aria-labelledby="check-connectivity-heading">
+    <div class="check-section-heading"><h2 id="check-connectivity-heading">{{ strings.checkConnectivity }}</h2></div>
+    <dl class="check-detail-list">
+      <div><dt>{{ strings.checkIpv4 }}</dt><dd id="check-ipv4">—</dd></div>
+      <div><dt>{{ strings.checkIpv6 }}</dt><dd id="check-ipv6">—</dd></div>
+      <div><dt>{{ strings.checkWebRtc }}</dt><dd id="check-webrtc">—</dd></div>
+    </dl>
+  </section>
+
+  <section class="check-section" aria-labelledby="check-browser-heading">
+    <div class="check-section-heading"><h2 id="check-browser-heading">{{ strings.checkBrowser }}</h2></div>
+    <p class="check-section-intro">{{ strings.checkBrowserText }}</p>
+    <dl class="check-detail-list check-browser-list">
+      <div><dt>User-Agent</dt><dd id="check-browser-ua">—</dd></div>
+      <div><dt>Platform</dt><dd id="check-browser-platform">—</dd></div>
+      <div><dt>Languages</dt><dd id="check-browser-languages">—</dd></div>
+      <div><dt>Time zone</dt><dd id="check-browser-timezone">—</dd></div>
+      <div><dt>Screen / DPR</dt><dd id="check-browser-screen">—</dd></div>
+      <div><dt>WebDriver</dt><dd id="check-browser-webdriver">—</dd></div>
+    </dl>
+  </section>
+
+  <section class="check-section" aria-labelledby="check-report-heading">
+    <div class="check-section-heading"><h2 id="check-report-heading">{{ strings.checkReportTitle }}</h2></div>
+    <p class="check-section-intro">{{ strings.checkReportText }}</p>
+    <textarea class="check-report" id="check-report" rows="12" readonly aria-label="{{ strings.checkReportTitle }}"></textarea>
+  </section>
+
+  <section class="check-section check-notes" aria-label="{{ strings.checkHow }}">
+    <details>
+      <summary>{{ strings.checkHow }}</summary>
+      <p>{{ strings.checkHowTrace }}</p>
+      <p>{{ strings.checkHowRtc }}</p>
+    </details>
+    <details>
+      <summary>{{ strings.checkLimits }}</summary>
+      <p>{{ strings.checkLimitsText }}</p>
+    </details>
+  </section>
+
+  <script type="application/json" id="check-messages">{{ strings.checkMessages | dump | safe }}</script>
+</article>
